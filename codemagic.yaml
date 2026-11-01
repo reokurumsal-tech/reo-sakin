@@ -24,8 +24,12 @@ workflows:
         script: xcode-project use-profiles
       - name: Sürüm numarası
         script: |
-          SON=$(app-store-connect get-latest-testflight-build-number "$APP_STORE_APPLE_ID" || echo 0)
-          cd ios/App && agvtool new-version -all $((SON + 1)) && agvtool new-marketing-version 1.0.0
+          SON=$(app-store-connect get-latest-testflight-build-number "$APP_STORE_APPLE_ID" 2>/dev/null | tail -1)
+          [[ "$SON" =~ ^[0-9]+$ ]] || SON=0
+          PL=ios/App/App/Info.plist
+          /usr/libexec/PlistBuddy -c "Set :CFBundleVersion $((SON + 1))" $PL
+          /usr/libexec/PlistBuddy -c "Set :CFBundleShortVersionString 1.0.0" $PL
+          echo "Derleme numarası: $((SON + 1))"
       - name: Derle (.ipa)
         script: xcode-project build-ipa --workspace ios/App/App.xcworkspace --scheme App
     artifacts:
