@@ -5,6 +5,14 @@
  */
 (function () {
   'use strict';
+  try { if (window.Capacitor && Capacitor.registerPlugin) Capacitor.registerPlugin('SplashScreen').hide().catch(function () {}); } catch (e) {}
+  try { basla(); } catch (e) { hataGoster('Uygulama başlatılamadı: ' + (e && e.message || e)); }
+  function hataGoster(m) {
+    var y = document.getElementById('yuk'), k = document.getElementById('yok');
+    if (y) y.classList.add('gz');
+    if (k) { k.classList.remove('gz'); var p = k.querySelector('p'); if (p) p.textContent = m; var b = k.querySelector('b'); if (b) b.textContent = 'Bir sorun oluştu'; }
+  }
+  function basla() {
   var PORTAL = 'https://reo-portal.com/e/giris';
   var C = window.Capacitor || null;
   var NATIVE = !!(C && C.isNativePlatform && C.isNativePlatform());
@@ -31,7 +39,13 @@
     yuk.classList.remove('gz'); yuklendi = false;
     f.classList.remove('on');
     f.src = PORTAL + (PORTAL.indexOf('?') < 0 ? '?' : '&') + 'app=' + PLATFORM;
-    setTimeout(function () { if (!yuklendi && !navigator.onLine) { yuk.classList.add('gz'); yok.classList.remove('gz'); } }, 20000);
+    clearTimeout(window.__zt);
+    window.__zt = setTimeout(function () {
+      if (yuklendi) return;
+      yuk.classList.add('gz'); yok.classList.remove('gz');
+      yok.querySelector('b').textContent = navigator.onLine ? 'Portal açılamadı' : 'İnternet bağlantısı yok';
+      yok.querySelector('p').textContent = navigator.onLine ? 'Sunucuya ulaşılamadı. Biraz sonra tekrar deneyin. (kod: Z15)' : 'REO Sakin\'i kullanmak için internete bağlanın, sonra tekrar deneyin.';
+    }, 15000);
   }
   f.addEventListener('load', function () {
     if (!f.src) return;
@@ -96,6 +110,7 @@
     var d = e.data;
     if (!d || typeof d !== 'object' || !d.reoSk || !guvenli(e.origin)) return;
     KAYNAK = e.source;
+    if (!yuklendi) { yuklendi = true; f.classList.add('on'); yuk.classList.add('gz'); yok.classList.add('gz'); }
     switch (d.tip) {
       case 'hazir': gonder({}); break;
       case 'giris':
@@ -117,4 +132,5 @@
   if (SP) setTimeout(function () { SP.hide().catch(function () {}); }, 300);
 
   ac();
+  }
 })();
