@@ -1,1 +1,0 @@
-Firebase konsolundan indirdiğiniz GoogleService-Info.plist ve google-services.json dosyalarını bu klasöre koyun.
