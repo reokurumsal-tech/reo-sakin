@@ -1,0 +1,57 @@
+# REO Sakin – bulutta derleme (Mac gerekmez). https://codemagic.io
+workflows:
+  ios-testflight:
+    name: iOS → TestFlight / App Store
+    max_build_duration: 60
+    instance_type: mac_mini_m2
+    integrations:
+      app_store_connect: REO App Store   # Codemagic › Teams › Integrations'ta verdiğiniz ad
+    environment:
+      node: 22
+      xcode: latest
+      cocoapods: default
+      ios_signing:
+        distribution_type: app_store
+        bundle_identifier: com.reotesis.sakin
+      vars:
+        APP_STORE_APPLE_ID: 0000000000   # App Store Connect › Uygulama › Genel › Apple ID
+    scripts:
+      - name: Paketler
+        script: npm install
+      - name: iOS projesi
+        script: bash scripts/ios-hazirla.sh
+      - name: İmza profilleri
+        script: xcode-project use-profiles
+      - name: Sürüm numarası
+        script: |
+          SON=$(app-store-connect get-latest-testflight-build-number "$APP_STORE_APPLE_ID" || echo 0)
+          cd ios/App && agvtool new-version -all $((SON + 1)) && agvtool new-marketing-version 1.0.0
+      - name: Derle (.ipa)
+        script: xcode-project build-ipa --workspace ios/App/App.xcworkspace --scheme App
+    artifacts:
+      - build/ios/ipa/*.ipa
+    publishing:
+      app_store_connect:
+        auth: integration
+        submit_to_testflight: true
+
+  android-play:
+    name: Android → Google Play (.aab)
+    max_build_duration: 45
+    instance_type: linux_x2
+    environment:
+      node: 22
+      java: 21
+      android_signing:
+        - reo_sakin_anahtar          # Codemagic › Code signing identities › Android keystores
+      vars:
+        PACKAGE_NAME: com.reotesis.sakin
+    scripts:
+      - name: Paketler
+        script: npm install
+      - name: Android projesi
+        script: bash scripts/android-hazirla.sh
+      - name: Derle (.aab)
+        script: cd android && ./gradlew bundleRelease
+    artifacts:
+      - android/app/build/outputs/**/*.aab

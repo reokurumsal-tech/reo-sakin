@@ -1,0 +1,27 @@
+{
+  "name": "reo-sakin",
+  "version": "1.0.0",
+  "private": true,
+  "description": "REO Sakin – Reo Tesis Yönetimi Ltd.Şti. sakin uygulaması",
+  "scripts": {
+    "hazirla:ios": "bash scripts/ios-hazirla.sh",
+    "hazirla:android": "bash scripts/android-hazirla.sh"
+  },
+  "dependencies": {
+    "@capacitor-firebase/messaging": "^7.0.0",
+    "@capacitor/android": "^7.4.0",
+    "@capacitor/app": "^7.0.0",
+    "@capacitor/browser": "^7.0.0",
+    "@capacitor/core": "^7.4.0",
+    "@capacitor/filesystem": "^7.0.0",
+    "@capacitor/ios": "^7.4.0",
+    "@capacitor/share": "^7.0.0",
+    "@capacitor/splash-screen": "^7.0.0",
+    "@capacitor/status-bar": "^7.0.0",
+    "firebase": "^11.0.0"
+  },
+  "devDependencies": {
+    "@capacitor/assets": "^3.0.5",
+    "@capacitor/cli": "^7.4.0"
+  }
+}
