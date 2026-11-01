@@ -5,6 +5,9 @@ cd "$(dirname "$0")/.."
 cp node_modules/@capacitor/core/dist/capacitor.js www/capacitor.js || { echo "HATA: @capacitor/core/dist/capacitor.js bulunamadı"; exit 1; }
 [ -f firebase/GoogleService-Info.plist ] || { echo "HATA: firebase/GoogleService-Info.plist yok (Firebase konsolundan indirin)."; exit 1; }
 [ -d ios ] || npx cap add ios
+# Apple: Nisan 2027'den itibaren en az iOS 15.0 hedefi zorunlu (ITMS-90068)
+sed -i '' "s/platform :ios, '[0-9.]*'/platform :ios, '15.0'/" ios/App/Podfile
+sed -i '' 's/IPHONEOS_DEPLOYMENT_TARGET = [0-9.]*;/IPHONEOS_DEPLOYMENT_TARGET = 15.0;/g' ios/App/App.xcodeproj/project.pbxproj
 npx capacitor-assets generate --ios --iconBackgroundColor '#ffffff' --splashBackgroundColor '#ffffff' --splashBackgroundColorDark '#0b3b60'
 npx cap sync ios
 A=ios/App/App
