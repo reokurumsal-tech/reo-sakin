@@ -1,5 +1,5 @@
 #!/bin/bash
-# Android projesini oluşturur ve REO Sakin ayarlarını uygular
+# Android projesini oluşturur ve Reo E-Portal ayarlarını uygular
 set -e
 cd "$(dirname "$0")/.."
 cp node_modules/@capacitor/core/dist/capacitor.js www/capacitor.js || { echo "HATA: @capacitor/core/dist/capacitor.js bulunamadı"; exit 1; }

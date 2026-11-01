@@ -1,5 +1,5 @@
 #!/bin/bash
-# iOS projesini oluşturur ve REO Sakin ayarlarını uygular (Mac veya Codemagic'te çalışır)
+# iOS projesini oluşturur ve Reo E-Portal ayarlarını uygular (Mac veya Codemagic'te çalışır)
 set -e
 cd "$(dirname "$0")/.."
 cp node_modules/@capacitor/core/dist/capacitor.js www/capacitor.js || { echo "HATA: @capacitor/core/dist/capacitor.js bulunamadı"; exit 1; }
@@ -24,7 +24,7 @@ PL=$A/Info.plist
 /usr/libexec/PlistBuddy -c "Add :UIBackgroundModes array" -c "Add :UIBackgroundModes:0 string remote-notification" $PL
 /usr/libexec/PlistBuddy -c "Delete :ITSAppUsesNonExemptEncryption" $PL 2>/dev/null || true
 /usr/libexec/PlistBuddy -c "Add :ITSAppUsesNonExemptEncryption bool false" $PL
-/usr/libexec/PlistBuddy -c "Set :CFBundleDisplayName 'REO Sakin'" $PL 2>/dev/null || /usr/libexec/PlistBuddy -c "Add :CFBundleDisplayName string 'REO Sakin'" $PL
+/usr/libexec/PlistBuddy -c "Set :CFBundleDisplayName 'Reo E-Portal'" $PL 2>/dev/null || /usr/libexec/PlistBuddy -c "Add :CFBundleDisplayName string 'Reo E-Portal'" $PL
 /usr/libexec/PlistBuddy -c "Delete :CFBundleDevelopmentRegion" $PL 2>/dev/null || true
 /usr/libexec/PlistBuddy -c "Add :CFBundleDevelopmentRegion string tr" $PL
 /usr/libexec/PlistBuddy -c "Delete :CFBundleLocalizations" $PL 2>/dev/null || true

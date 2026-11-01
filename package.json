@@ -2,7 +2,7 @@
   "name": "reo-sakin",
   "version": "1.0.0",
   "private": true,
-  "description": "REO Sakin – Reo Tesis Yönetimi Ltd.Şti. sakin uygulaması",
+  "description": "Reo E-Portal – Reo Tesis Yönetimi Ltd.Şti. sakin uygulaması",
   "scripts": {
     "hazirla:ios": "bash scripts/ios-hazirla.sh",
     "hazirla:android": "bash scripts/android-hazirla.sh"

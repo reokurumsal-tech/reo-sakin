@@ -1,4 +1,4 @@
-/* REO Sakin – uygulama kabuğu
+/* Reo E-Portal – uygulama kabuğu
  * Sakin portalını (reo-portal.com/e/giris) açar ve portalla postMessage üzerinden konuşur:
  *   portal → uygulama : {reoSk:1, tip:"hazir"|"giris"|"cikis"|"bildirimAyar"|"paylas"|"ac", ...}
  *   uygulama → portal : {reoApp:1, platform:"ios"|"android", push:"<FCM kimliği>", ac:"yenile"}
@@ -53,7 +53,7 @@
       if (yuklendi) return;
       yuk.classList.add('gz'); yok.classList.remove('gz');
       yok.querySelector('b').textContent = navigator.onLine ? 'Portal açılamadı' : 'İnternet bağlantısı yok';
-      yok.querySelector('p').textContent = navigator.onLine ? 'Sunucuya ulaşılamadı. Biraz sonra tekrar deneyin. (kod: Z15)' : 'REO Sakin\'i kullanmak için internete bağlanın, sonra tekrar deneyin.';
+      yok.querySelector('p').textContent = navigator.onLine ? 'Sunucuya ulaşılamadı. Biraz sonra tekrar deneyin. (kod: Z15)' : 'Reo E-Portal\'ı kullanmak için internete bağlanın, sonra tekrar deneyin.';
     }, 15000);
   }
   f.addEventListener('load', function () {
@@ -74,7 +74,7 @@
     return FM.checkPermissions().then(function (s) {
       if (s.receive === 'granted') return true;
       if (s.receive === 'denied' && !zorla) return false;
-      if (s.receive === 'denied') { kart('Bildirimler kapalı', 'Açmak için telefonunuzun Ayarlar › REO Sakin › Bildirimler bölümüne gidin.'); return false; }
+      if (s.receive === 'denied') { kart('Bildirimler kapalı', 'Açmak için telefonunuzun Ayarlar › Reo E-Portal › Bildirimler bölümüne gidin.'); return false; }
       return FM.requestPermissions().then(function (r) { return r.receive === 'granted'; });
     }).then(function (ok) {
       if (!ok) return false;
