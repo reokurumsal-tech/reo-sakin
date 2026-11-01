@@ -5,7 +5,7 @@ cd "$(dirname "$0")/.."
 cp node_modules/@capacitor/core/dist/capacitor.js www/capacitor.js || { echo "HATA: @capacitor/core/dist/capacitor.js bulunamadı"; exit 1; }
 [ -f firebase/google-services.json ] || { echo "HATA: firebase/google-services.json yok (Firebase konsolundan indirin)."; exit 1; }
 [ -d android ] || npx cap add android
-npx capacitor-assets generate --android --iconBackgroundColor '#ffffff' --splashBackgroundColor '#ffffff' --splashBackgroundColorDark '#0b3b60'
+npx capacitor-assets generate --android --iconBackgroundColor '#ffffff' --splashBackgroundColor '#ffffff' --splashBackgroundColorDark '#ffffff'
 npx cap sync android
 cp firebase/google-services.json android/app/google-services.json
 cp native/android/MainActivity.java android/app/src/main/java/com/reotesis/sakin/MainActivity.java

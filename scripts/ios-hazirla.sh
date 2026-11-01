@@ -8,7 +8,7 @@ cp node_modules/@capacitor/core/dist/capacitor.js www/capacitor.js || { echo "HA
 # Apple: Nisan 2027'den itibaren en az iOS 15.0 hedefi zorunlu (ITMS-90068)
 sed -i '' "s/platform :ios, '[0-9.]*'/platform :ios, '15.0'/" ios/App/Podfile
 sed -i '' 's/IPHONEOS_DEPLOYMENT_TARGET = [0-9.]*;/IPHONEOS_DEPLOYMENT_TARGET = 15.0;/g' ios/App/App.xcodeproj/project.pbxproj
-npx capacitor-assets generate --ios --iconBackgroundColor '#ffffff' --splashBackgroundColor '#ffffff' --splashBackgroundColorDark '#0b3b60'
+npx capacitor-assets generate --ios --iconBackgroundColor '#ffffff' --splashBackgroundColor '#ffffff' --splashBackgroundColorDark '#ffffff'
 npx cap sync ios
 A=ios/App/App
 cp firebase/GoogleService-Info.plist $A/GoogleService-Info.plist
