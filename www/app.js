@@ -5,7 +5,16 @@
  */
 (function () {
   'use strict';
-  try { if (window.Capacitor && Capacitor.registerPlugin) Capacitor.registerPlugin('SplashScreen').hide().catch(function () {}); } catch (e) {}
+  // Eklenti erişimi: @capacitor/core (capacitor.js) varsa onun registerPlugin'i, yoksa yerel köprünün Plugins nesnesi
+  function eklenti(ad) {
+    var C = window.Capacitor;
+    if (!C || !(C.isNativePlatform && C.isNativePlatform())) return null;
+    try { if (window.capacitorExports && capacitorExports.registerPlugin) return capacitorExports.registerPlugin(ad); } catch (e) {}
+    try { if (C.registerPlugin) return C.registerPlugin(ad); } catch (e) {}
+    if (C.Plugins && C.Plugins[ad]) return C.Plugins[ad];
+    return null;
+  }
+  try { var sp0 = eklenti('SplashScreen'); if (sp0) sp0.hide().catch(function () {}); } catch (e) {}
   try { basla(); } catch (e) { hataGoster('Uygulama başlatılamadı: ' + (e && e.message || e)); }
   function hataGoster(m) {
     var y = document.getElementById('yuk'), k = document.getElementById('yok');
@@ -17,7 +26,7 @@
   var C = window.Capacitor || null;
   var NATIVE = !!(C && C.isNativePlatform && C.isNativePlatform());
   var PLATFORM = NATIVE ? C.getPlatform() : 'web';
-  var P = function (ad) { return NATIVE ? C.registerPlugin(ad) : null; };
+  var P = function (ad) { return NATIVE ? eklenti(ad) : null; };
   var FM = P('FirebaseMessaging'), FS = P('Filesystem'), SH = P('Share'), BR = P('Browser'),
       APPP = P('App'), SB = P('StatusBar'), SP = P('SplashScreen');
 

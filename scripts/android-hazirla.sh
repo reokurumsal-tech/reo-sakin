@@ -2,6 +2,7 @@
 # Android projesini oluşturur ve REO Sakin ayarlarını uygular
 set -e
 cd "$(dirname "$0")/.."
+cp node_modules/@capacitor/core/dist/capacitor.js www/capacitor.js || { echo "HATA: @capacitor/core/dist/capacitor.js bulunamadı"; exit 1; }
 [ -f firebase/google-services.json ] || { echo "HATA: firebase/google-services.json yok (Firebase konsolundan indirin)."; exit 1; }
 [ -d android ] || npx cap add android
 npx capacitor-assets generate --android --iconBackgroundColor '#ffffff' --splashBackgroundColor '#ffffff' --splashBackgroundColorDark '#0b3b60'

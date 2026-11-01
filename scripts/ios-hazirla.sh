@@ -2,6 +2,7 @@
 # iOS projesini oluşturur ve REO Sakin ayarlarını uygular (Mac veya Codemagic'te çalışır)
 set -e
 cd "$(dirname "$0")/.."
+cp node_modules/@capacitor/core/dist/capacitor.js www/capacitor.js || { echo "HATA: @capacitor/core/dist/capacitor.js bulunamadı"; exit 1; }
 [ -f firebase/GoogleService-Info.plist ] || { echo "HATA: firebase/GoogleService-Info.plist yok (Firebase konsolundan indirin)."; exit 1; }
 [ -d ios ] || npx cap add ios
 npx capacitor-assets generate --ios --iconBackgroundColor '#ffffff' --splashBackgroundColor '#ffffff' --splashBackgroundColorDark '#0b3b60'
