@@ -47,7 +47,9 @@
     if (!navigator.onLine) { yuk.classList.add('gz'); yok.classList.remove('gz'); return; }
     yuk.classList.remove('gz'); yuklendi = false;
     f.classList.remove('on');
-    f.src = PORTAL + (PORTAL.indexOf('?') < 0 ? '?' : '&') + 'app=' + PLATFORM;
+    // Yönetim portalı doğrudan ana pencerede açılır (iç içe çerçeve yok → iOS'ta kayma/şerit sorunu olmaz)
+    try { location.replace(PORTAL); return; } catch (e) {}
+    f.src = PORTAL;
     clearTimeout(window.__zt);
     window.__zt = setTimeout(function () {
       if (yuklendi) return;
