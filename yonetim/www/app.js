@@ -148,6 +148,10 @@
   }
   if (SP) setTimeout(function () { SP.hide().catch(function () {}); }, 300);
 
+  // Pencere hiçbir zaman kaymasın (iOS bazen odaklanınca tüm görünümü kaydırıyor → üstte/altta mavi boşluk)
+  function sabitle() { if (window.scrollY || document.documentElement.scrollTop || document.body.scrollTop) { window.scrollTo(0, 0); document.documentElement.scrollTop = 0; document.body.scrollTop = 0; } }
+  window.addEventListener('scroll', sabitle, { passive: true });
+  if (window.visualViewport) visualViewport.addEventListener('resize', function () { setTimeout(sabitle, 120); });
   ac();
   }
 })();
