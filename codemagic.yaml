@@ -74,7 +74,7 @@ workflows:
         distribution_type: app_store
         bundle_identifier: com.reotesis.yonetim
       vars:
-        APP_STORE_APPLE_ID: 0000000000   # App Store Connect › Reo Yönetim › Apple Kimliği
+        APP_STORE_APPLE_ID: 6829723685   # App Store Connect › Reo Yönetim › Apple Kimliği
     scripts:
       - name: Paketler
         script: cd yonetim && npm install
