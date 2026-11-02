@@ -7,8 +7,8 @@
 <style>
 :root{--navy:#0b3b60}
 html,body{margin:0;height:100%;background:var(--navy);overflow:hidden;overscroll-behavior:none;position:fixed;inset:0;width:100%;font-family:-apple-system,system-ui,"Segoe UI",Roboto,sans-serif}
-#ust{position:fixed;left:0;right:0;top:0;height:env(safe-area-inset-top);background:var(--navy);z-index:2}
-#f{position:fixed;left:0;right:0;top:env(safe-area-inset-top);bottom:0;width:1px;min-width:100%;max-width:100%;height:calc(100% - env(safe-area-inset-top));border:0;background:#f1f5f9;opacity:0;transition:opacity .25s}
+#ust{position:fixed;left:0;right:0;top:0;height:var(--top,env(safe-area-inset-top));background:var(--navy);z-index:2}
+#f{position:fixed;left:0;right:0;top:var(--top,env(safe-area-inset-top));bottom:0;width:1px;min-width:100%;max-width:100%;height:calc(100% - var(--top,env(safe-area-inset-top)));border:0;background:#f1f5f9;opacity:0;transition:opacity .25s}
 #f.on{opacity:1}
 .ek{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;background:#fff;color:var(--navy);text-align:center;padding:24px;z-index:3}
 .ek img{width:96px;height:96px}
@@ -23,11 +23,18 @@ html,body{margin:0;height:100%;background:var(--navy);overflow:hidden;overscroll
 </style>
 </head>
 <body>
-<div id="ust"></div>
+<div id="ust"></div><div id="prb" style="position:fixed;top:0;left:0;width:1px;height:env(safe-area-inset-top);visibility:hidden;pointer-events:none"></div>
 <iframe id="f" title="Reo Yönetim" allow="clipboard-write"></iframe>
 <div class="ek" id="yuk"><img src="logo.png" alt=""><div class="dn"></div></div>
 <div class="ek gz" id="yok"><img src="logo.png" alt=""><b>İnternet bağlantısı yok</b><p>Reo Yönetim'ı kullanmak için internete bağlanın, sonra tekrar deneyin.</p><button type="button" id="tekrar">Tekrar dene</button></div>
 <div id="kart"></div>
+<script>/* Üst güvenli alan: env() 0 dönerse (bazı iOS WebView durumları) cihaz modeline göre belirle */
+(function(){function ust(){var p=document.getElementById("prb"),e=p?p.getBoundingClientRect().height:0,u=navigator.userAgent||"";
+ if(e>0){document.documentElement.style.setProperty("--top",e+"px");return}
+ if(!/(iPhone|iPod)/.test(u))return;var h=Math.max(screen.height,screen.width),t=20;
+ if(h>=932)t=59;else if(h>=926)t=47;else if(h>=896)t=48;else if(h>=874)t=62;else if(h>=852)t=59;else if(h>=844)t=47;else if(h>=812)t=44;
+ if(innerWidth>innerHeight)t=0;document.documentElement.style.setProperty("--top",t+"px")}
+ ust();setTimeout(ust,300);setTimeout(ust,1500);addEventListener("resize",function(){setTimeout(ust,100)})})();</script>
 <script src="capacitor.js"></script>
 <script src="app.js"></script>
 </body>
