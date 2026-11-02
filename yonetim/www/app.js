@@ -47,8 +47,6 @@
     if (!navigator.onLine) { yuk.classList.add('gz'); yok.classList.remove('gz'); return; }
     yuk.classList.remove('gz'); yuklendi = false;
     f.classList.remove('on');
-    // Yönetim portalı doğrudan ana pencerede açılır (iç içe çerçeve yok → iOS'ta kayma/şerit sorunu olmaz)
-    try { location.replace(PORTAL); return; } catch (e) {}
     f.src = PORTAL;
     clearTimeout(window.__zt);
     window.__zt = setTimeout(function () {
@@ -117,6 +115,14 @@
   }
 
   /* ---- Portaldan gelen mesajlar ---- */
+  // Portal "reo-ust0" gönderdiğinde (modül açıldı / klavye kapandı) aradaki reo-portal.com çerçevesini üste hizala
+  function ustHizala() {
+    try { window.scrollTo(0, 0); } catch (x) {}
+    try { f.contentWindow.postMessage('reo-ust0', '*'); } catch (x) {}
+  }
+  window.addEventListener('message', function (e) {
+    if (e.data === 'reo-ust0') { ustHizala(); setTimeout(ustHizala, 250); setTimeout(ustHizala, 800); return; }
+  });
   window.addEventListener('message', function (e) {
     var d = e.data;
     if (!d || typeof d !== 'object' || !d.reoSk || !guvenli(e.origin)) return;
