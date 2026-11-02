@@ -16,10 +16,9 @@
     ]
   },
   "ios": {
-    "contentInset": "never",
+    "contentInset": "always",
     "backgroundColor": "#0b3b60",
-    "limitsNavigationsToAppBoundDomains": false,
-    "scrollEnabled": false
+    "limitsNavigationsToAppBoundDomains": false
   },
   "android": {
     "backgroundColor": "#0b3b60"
