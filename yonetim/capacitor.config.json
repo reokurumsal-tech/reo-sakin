@@ -1,0 +1,34 @@
+{
+  "appId": "com.reotesis.yonetim",
+  "appName": "Reo Yönetim",
+  "webDir": "www",
+  "backgroundColor": "#0b3b60",
+  "server": {
+    "allowNavigation": [
+      "reo-portal.com",
+      "www.reo-portal.com",
+      "script.google.com",
+      "*.googleusercontent.com",
+      "*.google.com",
+      "*.gstatic.com",
+      "fonts.googleapis.com",
+      "cdn.jsdelivr.net"
+    ]
+  },
+  "ios": {
+    "contentInset": "never",
+    "backgroundColor": "#0b3b60",
+    "limitsNavigationsToAppBoundDomains": false
+  },
+  "android": {
+    "backgroundColor": "#0b3b60"
+  },
+  "plugins": {
+    "SplashScreen": {
+      "launchShowDuration": 1200,
+      "launchAutoHide": true,
+      "backgroundColor": "#ffffff",
+      "showSpinner": false
+    }
+  }
+}

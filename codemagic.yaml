@@ -59,3 +59,42 @@ workflows:
         script: cd android && ./gradlew bundleRelease
     artifacts:
       - android/app/build/outputs/**/*.aab
+
+  yonetim-ios:
+    name: Yönetim (Reo Yönetim) → TestFlight / App Store
+    max_build_duration: 60
+    instance_type: mac_mini_m2
+    integrations:
+      app_store_connect: REO App Store
+    environment:
+      node: 22
+      xcode: latest
+      cocoapods: default
+      ios_signing:
+        distribution_type: app_store
+        bundle_identifier: com.reotesis.yonetim
+      vars:
+        APP_STORE_APPLE_ID: 0000000000   # App Store Connect › Reo Yönetim › Apple Kimliği
+    scripts:
+      - name: Paketler
+        script: cd yonetim && npm install
+      - name: iOS projesi
+        script: bash yonetim/scripts/ios-hazirla.sh
+      - name: İmza profilleri
+        script: xcode-project use-profiles --project "yonetim/ios/App/App.xcodeproj"
+      - name: Sürüm numarası
+        script: |
+          SON=$(app-store-connect get-latest-testflight-build-number "$APP_STORE_APPLE_ID" 2>/dev/null | tail -1)
+          [[ "$SON" =~ ^[0-9]+$ ]] || SON=0
+          PL=yonetim/ios/App/App/Info.plist
+          /usr/libexec/PlistBuddy -c "Set :CFBundleVersion $((SON + 1))" $PL
+          /usr/libexec/PlistBuddy -c "Set :CFBundleShortVersionString 1.0.0" $PL
+          echo "Derleme numarası: $((SON + 1))"
+      - name: Derle (.ipa)
+        script: xcode-project build-ipa --workspace yonetim/ios/App/App.xcworkspace --scheme App
+    artifacts:
+      - build/ios/ipa/*.ipa
+    publishing:
+      app_store_connect:
+        auth: integration
+        submit_to_testflight: false

@@ -3,3 +3,6 @@ node_modules/
 /android/
 .DS_Store
 /www/capacitor.js
+/yonetim/ios/
+/yonetim/node_modules/
+/yonetim/www/capacitor.js
