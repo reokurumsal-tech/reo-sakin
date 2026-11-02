@@ -47,9 +47,6 @@
     if (!navigator.onLine) { yuk.classList.add('gz'); yok.classList.remove('gz'); return; }
     yuk.classList.remove('gz'); yuklendi = false;
     f.classList.remove('on');
-    // Portal, Safari'de ana ekrana eklenmiş gibi doğrudan ana pencerede açılır (iç içe çerçeve yok).
-    // contentInset "always" sayesinde sayfa saat/şarj çubuğunun altından başlar.
-    try { location.replace(PORTAL); return; } catch (e) {}
     f.src = PORTAL;
     clearTimeout(window.__zt);
     window.__zt = setTimeout(function () {
