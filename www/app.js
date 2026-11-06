@@ -114,6 +114,36 @@
       .catch(function (e) { if (!/cancel/i.test(String(e && e.message))) kart('Evrak paylaşılamadı', 'Lütfen tekrar deneyin.'); });
   }
 
+  /* ---- Oturum kasası ----
+   * Portal uygulamanın içinde başka bir sitenin çerçevesi olarak açıldığı için iOS onun depolamasını
+   * uygulama kapanınca siler. "Beni hatırla" ile verilen oturum anahtarı bu yüzden uygulamanın kendi
+   * kalıcı deposunda (Preferences, yoksa localStorage) tutulur ve açılışta portala geri verilir.
+   *   portal → uygulama : {reoKasa:"al", k:"sk"} | {reoKasa:"yaz", k:"sk", tok:"<64 hex>"|""}
+   *   uygulama → portal : {reoKasa:"cevap", tok:"...", app:true}
+   */
+  var PR = P('Preferences');
+  function kasaAnahtar(k) { return k === 'sk' ? 'reo_sk_tok' : 'reo__tok'; }
+  function kasaOku(ad) {
+    var yerel = function () { try { return localStorage.getItem(ad) || ''; } catch (e) { return ''; } };
+    if (!PR) return Promise.resolve(yerel());
+    return PR.get({ key: ad }).then(function (r) { return (r && r.value) || yerel(); }).catch(yerel);
+  }
+  function kasaYaz(ad, t) {
+    try { if (t) localStorage.setItem(ad, t); else localStorage.removeItem(ad); } catch (e) {}
+    if (PR) { (t ? PR.set({ key: ad, value: t }) : PR.remove({ key: ad })).catch(function () {}); }
+  }
+  window.addEventListener('message', function (e) {
+    var d = e.data;
+    if (!d || typeof d !== 'object' || !d.reoKasa || !/^https:\/\/([a-z0-9-]+\.)*googleusercontent\.com$/.test(e.origin)) return;
+    var ad = kasaAnahtar(d.k);
+    if (d.reoKasa === 'al') {
+      var kaynak = e.source, koken = e.origin;
+      kasaOku(ad).then(function (t) { try { kaynak.postMessage({ reoKasa: 'cevap', tok: /^[a-f0-9]{64}$/.test(t) ? t : '', app: true }, koken); } catch (x) {} });
+    } else if (d.reoKasa === 'yaz') {
+      kasaYaz(ad, /^[a-f0-9]{64}$/.test(d.tok || '') ? d.tok : '');
+    }
+  });
+
   /* ---- Portaldan gelen mesajlar ---- */
   window.addEventListener('message', function (e) {
     var d = e.data;
