@@ -15,6 +15,7 @@ workflows:
         bundle_identifier: com.reotesis.sakin
       vars:
         APP_STORE_APPLE_ID: 6829443861   # App Store Connect › Reo E-Portal › Apple Kimliği
+        SURUM: 1.0.1   # App Store'da yayınlanan sürümden büyük olmalı (yeni sürümde artırın)
     scripts:
       - name: Paketler
         script: npm install
@@ -28,7 +29,7 @@ workflows:
           [[ "$SON" =~ ^[0-9]+$ ]] || SON=0
           PL=ios/App/App/Info.plist
           /usr/libexec/PlistBuddy -c "Set :CFBundleVersion $((SON + 1))" $PL
-          /usr/libexec/PlistBuddy -c "Set :CFBundleShortVersionString 1.0.0" $PL
+          /usr/libexec/PlistBuddy -c "Set :CFBundleShortVersionString $SURUM" $PL
           echo "Derleme numarası: $((SON + 1))"
       - name: Derle (.ipa)
         script: xcode-project build-ipa --workspace ios/App/App.xcworkspace --scheme App
@@ -75,6 +76,7 @@ workflows:
         bundle_identifier: com.reotesis.yonetim
       vars:
         APP_STORE_APPLE_ID: 6829723685   # App Store Connect › Reo Yönetim › Apple Kimliği
+        SURUM: 1.0.0   # App Store'da yayınlanan sürümden büyük olmalı (yeni sürümde artırın)
     scripts:
       - name: Paketler
         script: cd yonetim && npm install
@@ -88,7 +90,7 @@ workflows:
           [[ "$SON" =~ ^[0-9]+$ ]] || SON=0
           PL=yonetim/ios/App/App/Info.plist
           /usr/libexec/PlistBuddy -c "Set :CFBundleVersion $((SON + 1))" $PL
-          /usr/libexec/PlistBuddy -c "Set :CFBundleShortVersionString 1.0.0" $PL
+          /usr/libexec/PlistBuddy -c "Set :CFBundleShortVersionString $SURUM" $PL
           echo "Derleme numarası: $((SON + 1))"
       - name: Derle (.ipa)
         script: xcode-project build-ipa --workspace yonetim/ios/App/App.xcworkspace --scheme App

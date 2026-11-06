@@ -32,7 +32,7 @@ android {
     buildTypes { release { if (System.getenv("CM_KEYSTORE_PATH")) { signingConfig signingConfigs.release } } }
     defaultConfig {
         if (System.getenv("BUILD_NUMBER")) { versionCode Integer.parseInt(System.getenv("BUILD_NUMBER")) + 1 }
-        versionName "1.0.0"
+        versionName "1.0.1"
     }
 }
 GEOF
