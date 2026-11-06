@@ -114,6 +114,34 @@
       .catch(function (e) { if (!/cancel/i.test(String(e && e.message))) kart('Evrak paylaşılamadı', 'Lütfen tekrar deneyin.'); });
   }
 
+  /* ---- Oturum kasası ----
+   * Portal, uygulamanın içinde başka bir sitenin çerçevesi olarak açıldığı için iOS onun depolamasını
+   * uygulama kapanınca siler. "Beni hatırla" ile verilen oturum anahtarı bu yüzden uygulamanın kendi
+   * kalıcı deposunda (Preferences, yoksa localStorage) tutulur ve açılışta portala geri verilir.
+   *   portal → uygulama : {reoKasa:"al"} | {reoKasa:"yaz", tok:"<64 hex>"|""}
+   *   uygulama → portal : {reoKasa:"cevap", tok:"...", app:true}
+   */
+  var PR = P('Preferences');
+  function kasaOku() {
+    var yerel = function () { try { return localStorage.getItem('reo__tok') || ''; } catch (e) { return ''; } };
+    if (!PR) return Promise.resolve(yerel());
+    return PR.get({ key: 'reo__tok' }).then(function (r) { return (r && r.value) || yerel(); }).catch(yerel);
+  }
+  function kasaYaz(t) {
+    try { if (t) localStorage.setItem('reo__tok', t); else localStorage.removeItem('reo__tok'); } catch (e) {}
+    if (PR) { (t ? PR.set({ key: 'reo__tok', value: t }) : PR.remove({ key: 'reo__tok' })).catch(function () {}); }
+  }
+  window.addEventListener('message', function (e) {
+    var d = e.data;
+    if (!d || typeof d !== 'object' || !d.reoKasa || !/^https:\/\/([a-z0-9-]+\.)*googleusercontent\.com$/.test(e.origin)) return;
+    if (d.reoKasa === 'al') {
+      var kaynak = e.source, koken = e.origin;
+      kasaOku().then(function (t) { try { kaynak.postMessage({ reoKasa: 'cevap', tok: /^[a-f0-9]{64}$/.test(t) ? t : '', app: true }, koken); } catch (x) {} });
+    } else if (d.reoKasa === 'yaz') {
+      kasaYaz(/^[a-f0-9]{64}$/.test(d.tok || '') ? d.tok : '');
+    }
+  });
+
   /* ---- Portaldan gelen mesajlar ---- */
   // Portal "reo-ust0" gönderdiğinde (modül açıldı / klavye kapandı) aradaki reo-portal.com çerçevesini üste hizala
   function ustHizala() {
