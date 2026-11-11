@@ -15,7 +15,9 @@ grep -q 'default_notification_channel_id' $M || sed -i.bak 's#</application>#   
 grep -q 'android:screenOrientation' $M || sed -i.bak 's#android:name=".MainActivity"#android:name=".MainActivity"\n            android:screenOrientation="portrait"#' $M
 rm -f $M.bak
 V=android/variables.gradle
-[ -f $V ] && sed -i.bak -E 's/minSdkVersion = [0-9]+/minSdkVersion = 24/' $V && rm -f $V.bak
+[ -f $V ] && sed -i.bak -E 's/minSdkVersion = [0-9]+/minSdkVersion = 24/; s/compileSdkVersion = [0-9]+/compileSdkVersion = 36/; s/targetSdkVersion = [0-9]+/targetSdkVersion = 36/' $V && rm -f $V.bak
+P=android/gradle.properties
+grep -q suppressUnsupportedCompileSdk $P || echo 'android.suppressUnsupportedCompileSdk=36' >> $P
 G=android/app/build.gradle
 grep -q REO_IMZA $G || cat >> $G <<'GEOF'
 
@@ -34,6 +36,7 @@ android {
     buildTypes { release { if (System.getenv("CM_KEYSTORE_PATH")) { signingConfig signingConfigs.release } } }
     defaultConfig {
         minSdkVersion 24
+        targetSdkVersion 36
         if (System.getenv("BUILD_NUMBER")) { versionCode Integer.parseInt(System.getenv("BUILD_NUMBER")) + 1 }
         versionName "1.0.1"
     }
