@@ -112,7 +112,7 @@ workflows:
         - reo_sakin_anahtar          # aynı yükleme anahtarı kullanılabilir (Play her uygulamayı kendi anahtarıyla imzalar)
       vars:
         PACKAGE_NAME: com.reotesis.yonetim
-        SURUM: 1.0.1
+        SURUM: 1.0.2
     scripts:
       - name: Paketler
         script: cd yonetim && npm install

@@ -1,5 +1,6 @@
 package com.reotesis.yonetim;
 
+import android.graphics.Color;
 import android.os.Bundle;
 import android.webkit.CookieManager;
 import com.getcapacitor.BridgeActivity;
@@ -12,5 +13,8 @@ public class MainActivity extends BridgeActivity {
         CookieManager cm = CookieManager.getInstance();
         cm.setAcceptCookie(true);
         cm.setAcceptThirdPartyCookies(this.bridge.getWebView(), true);
+        // Android 15+ kenardan kenara: içerik durum çubuğunun altına girmesin (capacitor.config: adjustMarginsForEdgeToEdge=force);
+        // boşta kalan durum çubuğu alanı lacivert görünsün
+        getWindow().getDecorView().setBackgroundColor(Color.parseColor("#0b3b60"));
     }
 }

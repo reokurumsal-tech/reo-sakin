@@ -22,7 +22,8 @@
     "scrollEnabled": false
   },
   "android": {
-    "backgroundColor": "#0b3b60"
+    "backgroundColor": "#0b3b60",
+    "adjustMarginsForEdgeToEdge": "force"
   },
   "plugins": {
     "SplashScreen": {
