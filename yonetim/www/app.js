@@ -49,16 +49,22 @@
     f.classList.remove('on');
     f.src = PORTAL;
     clearTimeout(window.__zt);
+    // Yönetim portalı büyük bir sayfa (4 MB+); mobil bağlantıda 15 sn'yi aşabilir: önce "yavaş" notu, 60 sn'de hata
+    var ym = document.getElementById('yukm'); if (ym) ym.style.display = 'none';
+    clearTimeout(window.__zy);
+    window.__zy = setTimeout(function () { if (!yuklendi && ym) ym.style.display = 'block'; }, 12000);
     window.__zt = setTimeout(function () {
       if (yuklendi) return;
       yuk.classList.add('gz'); yok.classList.remove('gz');
       yok.querySelector('b').textContent = navigator.onLine ? 'Portal açılamadı' : 'İnternet bağlantısı yok';
-      yok.querySelector('p').textContent = navigator.onLine ? 'Sunucuya ulaşılamadı. Biraz sonra tekrar deneyin. (kod: Z15)' : 'Reo Yönetim\'ı kullanmak için internete bağlanın, sonra tekrar deneyin.';
-    }, 15000);
+      yok.querySelector('p').textContent = navigator.onLine ? 'Sunucuya ulaşılamadı. Biraz sonra tekrar deneyin. (kod: Z60)' : 'Reo Yönetim\'ı kullanmak için internete bağlanın, sonra tekrar deneyin.';
+    }, 60000);
   }
   f.addEventListener('load', function () {
     if (!f.src) return;
     yuklendi = true;
+    clearTimeout(window.__zt); clearTimeout(window.__zy);
+    yok.classList.add('gz');
     setTimeout(function () { f.classList.add('on'); yuk.classList.add('gz'); }, 400);
   });
   document.getElementById('tekrar').onclick = ac;
