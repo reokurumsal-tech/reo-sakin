@@ -100,3 +100,25 @@ workflows:
       app_store_connect:
         auth: integration
         submit_to_testflight: false
+
+  yonetim-android:
+    name: Yönetim (Reo Yönetim) → Google Play Dahili test (.aab)
+    max_build_duration: 45
+    instance_type: mac_mini_m2
+    environment:
+      node: 22
+      java: 21
+      android_signing:
+        - reo_sakin_anahtar          # aynı yükleme anahtarı kullanılabilir (Play her uygulamayı kendi anahtarıyla imzalar)
+      vars:
+        PACKAGE_NAME: com.reotesis.yonetim
+        SURUM: 1.0.0
+    scripts:
+      - name: Paketler
+        script: cd yonetim && npm install
+      - name: Android projesi
+        script: bash yonetim/scripts/android-hazirla.sh
+      - name: Derle (.aab)
+        script: cd yonetim/android && ./gradlew bundleRelease
+    artifacts:
+      - yonetim/android/app/build/outputs/**/*.aab
