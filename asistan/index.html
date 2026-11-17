@@ -2,7 +2,7 @@
 <html lang="tr">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,viewport-fit=cover">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="robots" content="noindex,nofollow">
 <title>REO Asistan</title>
 <meta name="theme-color" content="#0b3b60">
@@ -53,8 +53,6 @@ html,body{margin:0;height:100%;background:var(--navy);overflow:hidden;overscroll
   /* iPhone: klavye açılınca sayfa kaymasın / büyümesin; portal klavye kapanınca 'reo-ust0' gönderir */
   function ustHizala() { try { window.scrollTo(0, 0); document.body.scrollTop = 0; } catch (x) {} }
   window.addEventListener('message', function (e) { if (e.data === 'reo-ust0') { ustHizala(); setTimeout(ustHizala, 250); setTimeout(ustHizala, 800); } });
-  window.addEventListener('scroll', function () { if (window.scrollY || window.scrollX) ustHizala(); }, { passive: true });
-  if (window.visualViewport) window.visualViewport.addEventListener('resize', function () { setTimeout(ustHizala, 50); setTimeout(ustHizala, 400); });
   /* Oturum kasası: gömülü portalın depolaması kalıcı olmayabilir; "Beni hatırla" anahtarı burada saklanır */
   window.addEventListener('message', function (e) {
     var d = e.data;
