@@ -50,6 +50,17 @@ html,body{margin:0;height:100%;background:var(--navy);overflow:hidden;overscroll
   var f = document.getElementById('f'), yuk = document.getElementById('yuk'), yok = document.getElementById('yok');
   if (!u) u = 'https://script.google.com/macros/s/AKfycbx88E8xU_YinGsI2sjn9xNwFjG6bujnV9qcGDgYWkUySPOCIIUxZmBHSW7huskapTRM/exec';
   if (!u) { yuk.classList.add('gz'); yok.classList.remove('gz'); return; }
+  /* Oturum kasası: gömülü portalın depolaması kalıcı olmayabilir; "Beni hatırla" anahtarı burada saklanır */
+  window.addEventListener('message', function (e) {
+    var d = e.data;
+    if (!d || typeof d !== 'object' || !d.reoKasa || !/^https:\/\/([a-z0-9-]+\.)*googleusercontent\.com$/.test(e.origin)) return;
+    if (d.reoKasa === 'al') {
+      var t = ''; try { t = localStorage.getItem('reo_asistan_tok') || ''; } catch (x) {}
+      try { e.source.postMessage({ reoKasa: 'cevap', tok: /^[a-f0-9]{64}$/.test(t) ? t : '', app: true }, e.origin); } catch (x) {}
+    } else if (d.reoKasa === 'yaz') {
+      try { if (/^[a-f0-9]{64}$/.test(d.tok || '')) localStorage.setItem('reo_asistan_tok', d.tok); else localStorage.removeItem('reo_asistan_tok'); } catch (x) {}
+    }
+  });
   f.addEventListener('load', function () { setTimeout(function () { f.classList.add('on'); yuk.classList.add('gz'); }, 600); });
   f.src = u + '?mod=asistan';
 
