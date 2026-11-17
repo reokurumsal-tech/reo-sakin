@@ -43,7 +43,7 @@ html,body{margin:0;height:100%;background:var(--navy);overflow:hidden;overscroll
 <script>
 (function () {
   'use strict';
-  var RE = /^https:\/\/script\.google\.com\/macros\/s\/[\w-]{20,120}\/exec$/;
+  var RE = /^https:\/\/script\.google\.com\/(a\/macros\/[\w.-]+|macros)\/s\/[\w-]{20,120}\/exec$/;
   var q = new URLSearchParams(location.search).get('u') || '', u = '';
   if (RE.test(q)) { u = q; try { localStorage.setItem('reo_asistan_u', q); } catch (e) {} }
   else { try { var s = localStorage.getItem('reo_asistan_u') || ''; if (RE.test(s)) u = s; } catch (e) {} }
