@@ -5,7 +5,7 @@ set -e
 cd "$(dirname "$0")/.."
 cp node_modules/@capacitor/core/dist/capacitor.js www/capacitor.js || { echo "HATA: @capacitor/core/dist/capacitor.js bulunamadı"; exit 1; }
 [ -d android ] || npx cap add android
-npx capacitor-assets generate --android --iconBackgroundColor '#0b3b60' --splashBackgroundColor '#0b3b60' --splashBackgroundColorDark '#0b3b60'
+npx capacitor-assets generate --android --iconBackgroundColor '#4338ca' --splashBackgroundColor '#4338ca' --splashBackgroundColorDark '#4338ca'
 npx cap sync android
 cp native/android/MainActivity.java android/app/src/main/java/com/reotesis/asistan/MainActivity.java
 V=android/variables.gradle
