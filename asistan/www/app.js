@@ -174,6 +174,34 @@
     }
   });
 
+  /* ---- Sesli komut: Android WebView tarayıcı ses tanımasını desteklemez; Google ses tanıma ile burada yapılır ----
+   *   portal → uygulama : {reoSes:"dinle"}
+   *   uygulama → portal : {reoSes:"basladi"} sonra {reoSes:"sonuc", metin} ya da {reoSes:"hata", kod:"izin"|"yok"|"iptal"|"hata"}
+   */
+  var SRP = P('SpeechRecognition');
+  window.addEventListener('message', function (e) {
+    var d = e.data;
+    if (!d || typeof d !== 'object' || d.reoSes !== 'dinle' || !/^https:\/\/([a-z0-9-]+\.)*googleusercontent\.com$/.test(e.origin)) return;
+    var src = e.source, o = e.origin, yaz = function (m) { try { src.postMessage(m, o); } catch (x) {} };
+    if (!SRP) { yaz({ reoSes: 'hata', kod: 'yok' }); return; }
+    yaz({ reoSes: 'basladi' });
+    SRP.available().then(function (a) {
+      if (a && a.available === false) throw { kod: 'yok' };
+      return SRP.checkPermissions();
+    }).then(function (p) {
+      if (p && p.speechRecognition === 'granted') return p;
+      return SRP.requestPermissions();
+    }).then(function (p) {
+      if (!p || p.speechRecognition !== 'granted') throw { kod: 'izin' };
+      return SRP.start({ language: d.dil || 'tr-TR', maxResults: 1, prompt: 'Konuşun', partialResults: false, popup: true });
+    }).then(function (r) {
+      yaz({ reoSes: 'sonuc', metin: (r && r.matches && r.matches[0]) || '' });
+    }).catch(function (x) {
+      var m = String((x && x.message) || '');
+      yaz({ reoSes: 'hata', kod: (x && x.kod) || (/cancel|iptal|no match|didn.t understand/i.test(m) ? 'iptal' : 'hata'), mesaj: m });
+    });
+  });
+
   /* ---- Yerel ayarlar ---- */
   if (SB) { SB.setStyle({ style: 'DARK' }).catch(function () {}); if (PLATFORM === 'android') SB.setBackgroundColor({ color: '#0b3b60' }).catch(function () {}); }
   if (APPP) {

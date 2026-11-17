@@ -7,6 +7,9 @@ cp node_modules/@capacitor/core/dist/capacitor.js www/capacitor.js || { echo "HA
 [ -d android ] || npx cap add android
 npx capacitor-assets generate --android --iconBackgroundColor '#4338ca' --splashBackgroundColor '#4338ca' --splashBackgroundColorDark '#4338ca'
 npx cap sync android
+# Sesli komut: mikrofon izni ve Google ses tanıma servisine erişim (Android 11+ paket görünürlüğü)
+M=android/app/src/main/AndroidManifest.xml
+grep -q RECORD_AUDIO $M || perl -0pi -e 's#<application#<uses-permission android:name="android.permission.RECORD_AUDIO" />\n    <queries><intent><action android:name="android.speech.RecognitionService" /></intent></queries>\n    <application#' $M
 cp native/android/MainActivity.java android/app/src/main/java/com/reotesis/asistan/MainActivity.java
 V=android/variables.gradle
 [ -f $V ] && sed -i.bak -E 's/minSdkVersion = [0-9]+/minSdkVersion = 24/; s/compileSdkVersion = [0-9]+/compileSdkVersion = 36/; s/targetSdkVersion = [0-9]+/targetSdkVersion = 36/' $V && rm -f $V.bak

@@ -134,7 +134,7 @@ workflows:
         - reo_sakin_anahtar          # aynı yükleme anahtarı (Play her uygulamayı kendi anahtarıyla imzalar)
       vars:
         PACKAGE_NAME: com.reotesis.asistan
-        SURUM: 1.0.0
+        SURUM: 1.0.1
     scripts:
       - name: Paketler
         script: cd asistan && npm install
