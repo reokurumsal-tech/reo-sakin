@@ -22,7 +22,7 @@
     if (k) { k.classList.remove('gz'); var p = k.querySelector('p'); if (p) p.textContent = m; var b = k.querySelector('b'); if (b) b.textContent = 'Bir sorun oluştu'; }
   }
   function basla() {
-  var PORTAL = 'https://script.google.com/macros/s/AKfycbx88E8xU_YinGsI2sjn9xNwFjG6bujnV9qcGDgYWkUySPOCIIUxZmBHSW7huskapTRM/exec?mod=asistan';
+  var PORTAL = 'https://script.google.com/macros/s/AKfycbx88E8xU_YinGsI2sjn9xNwFjG6bujnV9qcGDgYWkUySPOCIIUxZmBHSW7huskapTRM/exec?mod=asistan'; // Apps Script dağıtım adresi (Dağıtımları yönet ile güncellenince değişmez)
   var C = window.Capacitor || null;
   var NATIVE = !!(C && C.isNativePlatform && C.isNativePlatform());
   var PLATFORM = NATIVE ? C.getPlatform() : 'web';
@@ -142,7 +142,7 @@
     if (!d || typeof d !== 'object' || !d.reoKasa || !/^https:\/\/([a-z0-9-]+\.)*googleusercontent\.com$/.test(e.origin)) return;
     if (d.reoKasa === 'al') {
       var kaynak = e.source, koken = e.origin;
-      kasaOku().then(function (t) { try { kaynak.postMessage({ reoKasa: 'cevap', tok: /^[a-f0-9]{64}$/.test(t) ? t : '', app: true }, koken); } catch (x) {} });
+      kasaOku().then(function (t) { try { kaynak.postMessage({ reoKasa: 'cevap', tok: /^[a-f0-9]{64}$/.test(t) ? t : '', app: true, mod: 'asistan' }, koken); } catch (x) {} });
     } else if (d.reoKasa === 'yaz') {
       kasaYaz(/^[a-f0-9]{64}$/.test(d.tok || '') ? d.tok : '');
     }
