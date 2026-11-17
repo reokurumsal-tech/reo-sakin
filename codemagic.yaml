@@ -122,3 +122,25 @@ workflows:
         script: cd yonetim/android && ./gradlew bundleRelease
     artifacts:
       - yonetim/android/app/build/outputs/**/*.aab
+
+  asistan-android:
+    name: REO Asistan → Google Play Dahili test (.aab)
+    max_build_duration: 45
+    instance_type: mac_mini_m2
+    environment:
+      node: 22
+      java: 21
+      android_signing:
+        - reo_sakin_anahtar          # aynı yükleme anahtarı (Play her uygulamayı kendi anahtarıyla imzalar)
+      vars:
+        PACKAGE_NAME: com.reotesis.asistan
+        SURUM: 1.0.0
+    scripts:
+      - name: Paketler
+        script: cd asistan && npm install
+      - name: Android projesi
+        script: bash asistan/scripts/android-hazirla.sh
+      - name: Derle (.aab)
+        script: cd asistan/android && ./gradlew bundleRelease
+    artifacts:
+      - asistan/android/app/build/outputs/**/*.aab

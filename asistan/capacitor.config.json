@@ -1,0 +1,36 @@
+{
+  "appId": "com.reotesis.asistan",
+  "appName": "REO Asistan",
+  "webDir": "www",
+  "backgroundColor": "#0b3b60",
+  "server": {
+    "allowNavigation": [
+      "reo-portal.com",
+      "www.reo-portal.com",
+      "script.google.com",
+      "*.googleusercontent.com",
+      "*.google.com",
+      "*.gstatic.com",
+      "fonts.googleapis.com",
+      "cdn.jsdelivr.net"
+    ]
+  },
+  "ios": {
+    "contentInset": "never",
+    "backgroundColor": "#0b3b60",
+    "limitsNavigationsToAppBoundDomains": false,
+    "scrollEnabled": false
+  },
+  "android": {
+    "backgroundColor": "#0b3b60",
+    "adjustMarginsForEdgeToEdge": "force"
+  },
+  "plugins": {
+    "SplashScreen": {
+      "launchShowDuration": 1200,
+      "launchAutoHide": true,
+      "backgroundColor": "#0b3b60",
+      "showSpinner": false
+    }
+  }
+}
