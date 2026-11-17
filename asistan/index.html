@@ -56,7 +56,7 @@ html,body{margin:0;height:100%;background:var(--navy);overflow:hidden;overscroll
     if (!d || typeof d !== 'object' || !d.reoKasa || !/^https:\/\/([a-z0-9-]+\.)*googleusercontent\.com$/.test(e.origin)) return;
     if (d.reoKasa === 'al') {
       var t = ''; try { t = localStorage.getItem('reo_asistan_tok') || ''; } catch (x) {}
-      try { e.source.postMessage({ reoKasa: 'cevap', tok: /^[a-f0-9]{64}$/.test(t) ? t : '', app: true }, e.origin); } catch (x) {}
+      try { e.source.postMessage({ reoKasa: 'cevap', tok: /^[a-f0-9]{64}$/.test(t) ? t : '', app: true, mod: 'asistan' }, e.origin); } catch (x) {}
     } else if (d.reoKasa === 'yaz') {
       try { if (/^[a-f0-9]{64}$/.test(d.tok || '')) localStorage.setItem('reo_asistan_tok', d.tok); else localStorage.removeItem('reo_asistan_tok'); } catch (x) {}
     }
