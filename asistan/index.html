@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="robots" content="noindex,nofollow">
+<title>REO Asistan</title>
+<meta name="theme-color" content="#0b3b60">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="REO Asistan">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icon-192.png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<style>
+:root{--navy:#0b3b60}
+html,body{margin:0;height:100%;background:var(--navy);overflow:hidden;overscroll-behavior:none;font-family:-apple-system,system-ui,"Segoe UI",Roboto,sans-serif;color:#fff}
+#ust{position:fixed;left:0;right:0;top:0;height:env(safe-area-inset-top);background:var(--navy);z-index:2}
+#f{position:fixed;left:0;right:0;top:env(safe-area-inset-top);bottom:0;width:100%;height:calc(100% - env(safe-area-inset-top));border:0;background:#fff;opacity:0;transition:opacity .25s}
+#f.on{opacity:1}
+.ek{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;text-align:center;padding:24px;z-index:3}
+.ek img{width:84px;height:84px;border-radius:20px}
+.ek b{font-size:1.1rem}
+.ek p{margin:0;color:#cbd5e1;font-size:.92rem;max-width:320px;line-height:1.5}
+.dn{width:26px;height:26px;border:3px solid rgba(255,255,255,.25);border-top-color:#fff;border-radius:50%;animation:d 1s linear infinite}
+@keyframes d{to{transform:rotate(360deg)}}
+.gz{display:none!important}
+#kur{position:fixed;left:12px;right:12px;bottom:calc(12px + env(safe-area-inset-bottom));background:#fff;color:#0f172a;border-radius:14px;padding:14px 16px;box-shadow:0 12px 40px rgba(0,0,0,.35);z-index:4;font-size:.9rem;line-height:1.45}
+#kur b{display:block;margin-bottom:4px;color:var(--navy)}
+#kur ol{margin:6px 0 0;padding-left:20px}
+#kur .r{display:flex;gap:8px;justify-content:flex-end;margin-top:10px}
+#kur button{border:1px solid #cbd5e1;background:#fff;color:#0f172a;border-radius:10px;font:600 .88rem inherit;padding:8px 14px}
+#kur button.a{background:var(--navy);border-color:var(--navy);color:#fff}
+</style>
+</head>
+<body>
+<div id="ust"></div>
+<iframe id="f" title="REO Asistan" allow="clipboard-write; clipboard-read; web-share"></iframe>
+<div class="ek" id="yuk"><img src="icon-192.png" alt=""><div class="dn"></div><p>Asistan açılıyor…</p></div>
+<div class="ek gz" id="yok"><img src="icon-192.png" alt=""><b>Portal adresi bulunamadı</b><p>Bu sayfayı portaldaki Asistan ekranında yer alan “Asistanı telefonunuza uygulama olarak ekleyin” bağlantısından açın.</p></div>
+<div id="kur" class="gz"><b>Ana ekrana ekleyin</b><span id="kurm"></span><div class="r"><button id="kurx">Kapat</button><button class="a gz" id="kury">Ana ekrana ekle</button></div></div>
+<script>
+(function () {
+  'use strict';
+  var RE = /^https:\/\/script\.google\.com\/macros\/s\/[\w-]{20,120}\/exec$/;
+  var q = new URLSearchParams(location.search).get('u') || '', u = '';
+  if (RE.test(q)) { u = q; try { localStorage.setItem('reo_asistan_u', q); } catch (e) {} }
+  else { try { var s = localStorage.getItem('reo_asistan_u') || ''; if (RE.test(s)) u = s; } catch (e) {} }
+  var f = document.getElementById('f'), yuk = document.getElementById('yuk'), yok = document.getElementById('yok');
+  if (!u) { yuk.classList.add('gz'); yok.classList.remove('gz'); return; }
+  f.addEventListener('load', function () { setTimeout(function () { f.classList.add('on'); yuk.classList.add('gz'); }, 600); });
+  f.src = u + '?mod=asistan';
+
+  /* Ana ekrana ekleme yardımı (yalnızca tarayıcıda açıkken) */
+  var tek = (window.matchMedia && matchMedia('(display-mode: standalone)').matches) || navigator.standalone === true;
+  var kapali = false; try { kapali = localStorage.getItem('reo_asistan_kur') === '1'; } catch (e) {}
+  if (tek || kapali) return;
+  var ios = /iphone|ipad|ipod/i.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+  var kur = document.getElementById('kur'), m = document.getElementById('kurm'), y = document.getElementById('kury'), olay = null;
+  m.innerHTML = ios
+    ? '<ol><li>Safari’de alttaki <b style="display:inline">Paylaş</b> düğmesine dokunun.</li><li><b style="display:inline">Ana Ekrana Ekle</b>’yi seçin, sonra <b style="display:inline">Ekle</b>.</li></ol>'
+    : '<ol><li>Chrome’da sağ üstteki <b style="display:inline">⋮</b> menüsünü açın.</li><li><b style="display:inline">Ana ekrana ekle</b> ya da <b style="display:inline">Uygulamayı yükle</b>’yi seçin.</li></ol>';
+  setTimeout(function () { kur.classList.remove('gz'); }, 2500);
+  window.addEventListener('beforeinstallprompt', function (e) { e.preventDefault(); olay = e; y.classList.remove('gz'); m.innerHTML = 'Asistanı uygulama gibi açmak için telefonunuzun ana ekranına ekleyin.'; });
+  y.addEventListener('click', function () { if (!olay) return; olay.prompt(); olay.userChoice.then(function () { kur.classList.add('gz'); }); });
+  document.getElementById('kurx').addEventListener('click', function () { kur.classList.add('gz'); try { localStorage.setItem('reo_asistan_kur', '1'); } catch (e) {} });
+  window.addEventListener('appinstalled', function () { kur.classList.add('gz'); });
+})();
+</script>
+</body>
+</html>

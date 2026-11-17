@@ -1,0 +1,16 @@
+{
+  "id": "reo-asistan",
+  "name": "REO Asistan",
+  "short_name": "Asistan",
+  "description": "REO Portal yapay zekâ asistanı",
+  "lang": "tr",
+  "display": "standalone",
+  "scope": "./",
+  "background_color": "#0b3b60",
+  "theme_color": "#0b3b60",
+  "orientation": "portrait",
+  "icons": [
+    { "src": "icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any maskable" },
+    { "src": "icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any maskable" }
+  ]
+}
