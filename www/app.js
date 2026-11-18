@@ -162,10 +162,68 @@
     }
   });
 
+  /* ---- Dil (cihaz diline göre: Türkçe, English, Русский) ---- */
+  var DIL = (function () { var l = String((navigator.languages && navigator.languages[0]) || navigator.language || 'tr').toLowerCase(); return /^ru/.test(l) ? 'ru' : /^tr/.test(l) ? 'tr' : 'en'; })();
+  var MET = {
+    tr: { atla: 'Atla', ileri: 'İleri', basla: 'Başla', cikB: 'Uygulamadan çıkılsın mı?', cikP: 'REO Sakin Portalı kapatılacak.', vaz: 'Vazgeç', cik: 'Çık',
+      tur: [['REO Sakin Portalı\'na hoş geldiniz', 'Yaşadığınız sitenin aidat, ödeme ve duyurularını tek yerden, güvenle takip edin.'],
+            ['Borcunuz ve ödemeleriniz', 'Güncel aidat borcunuzu, ödeme geçmişinizi ve hesap ekstrenizi görün; ekstreyi PDF olarak paylaşın.'],
+            ['Duyurular ve bildirimler', 'Yönetim duyuruları, su ve elektrik kesintisi gibi bilgiler telefonunuza bildirim olarak gelir.'],
+            ['Nasıl giriş yapılır?', 'Dairenize kayıtlı telefon numaranızla giriş yapın. İlk kez giriyorsanız “İlk kez giriyorum”a dokunup kendi şifrenizi belirleyin.']] },
+    en: { atla: 'Skip', ileri: 'Next', basla: 'Get started', cikB: 'Exit the app?', cikP: 'REO Resident Portal will be closed.', vaz: 'Cancel', cik: 'Exit',
+      tur: [['Welcome to REO Resident Portal', 'Follow the dues, payments and announcements of your residence securely in one place.'],
+            ['Your balance and payments', 'See your current dues balance, payment history and account statement; share the statement as a PDF.'],
+            ['Announcements and notifications', 'Management announcements and notices such as water or power outages arrive as notifications on your phone.'],
+            ['How to sign in', 'Sign in with the phone number registered to your flat. If this is your first time, tap “First time here” and set your own password.']] },
+    ru: { atla: 'Пропустить', ileri: 'Далее', basla: 'Начать', cikB: 'Выйти из приложения?', cikP: 'Портал жильца REO будет закрыт.', vaz: 'Отмена', cik: 'Выйти',
+      tur: [['Добро пожаловать в портал жильца REO', 'Следите за взносами, платежами и объявлениями вашего комплекса в одном месте.'],
+            ['Ваш долг и платежи', 'Смотрите текущую задолженность, историю платежей и выписку по счёту; делитесь выпиской в PDF.'],
+            ['Объявления и уведомления', 'Объявления управления и сообщения об отключении воды или электричества приходят на телефон.'],
+            ['Как войти', 'Войдите по номеру телефона, указанному для вашей квартиры. При первом входе нажмите «Впервые здесь» и задайте пароль.']] }
+  }[DIL];
+  var IKON = [
+    '<svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M3 10.5 12 3l9 7.5"/><path d="M5 9.5V21h14V9.5"/><path d="M10 21v-6h4v6"/></svg>',
+    '<svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2.5"/><path d="M3 10h18"/><path d="M7 15h4"/></svg>',
+    '<svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M6 8a6 6 0 1 1 12 0c0 7 3 8 3 8H3s3-1 3-8"/><path d="M10 20a2 2 0 0 0 4 0"/></svg>',
+    '<svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="6" y="2.5" width="12" height="19" rx="2.5"/><path d="M10.5 18.5h3"/><path d="M9.5 10.5l2 2 3.5-3.5"/></svg>'];
+
+  /* ---- Tanıtım turu: yalnızca ilk açılışta ---- */
+  var tur = document.getElementById('tur'), turI = 0;
+  function turGoster() {
+    var t = MET.tur[turI];
+    document.getElementById('turSl').innerHTML = '<div class="ik">' + IKON[turI] + '</div><h2></h2><p></p>';
+    var sl = document.getElementById('turSl'); sl.querySelector('h2').textContent = t[0]; sl.querySelector('p').textContent = t[1];
+    document.getElementById('turNk').innerHTML = MET.tur.map(function (x, i) { return '<i' + (i === turI ? ' class="on"' : '') + '></i>'; }).join('');
+    document.getElementById('turIleri').textContent = turI === MET.tur.length - 1 ? MET.basla : MET.ileri;
+    document.getElementById('turAtla').style.visibility = turI === MET.tur.length - 1 ? 'hidden' : 'visible';
+  }
+  function turBitir() { tur.classList.add('gz'); try { localStorage.setItem('reo_tur_v1', '1'); } catch (e) {} }
+  function turAcikMi() { return !tur.classList.contains('gz'); }
+  document.getElementById('turAtla').textContent = MET.atla;
+  document.getElementById('turAtla').addEventListener('click', turBitir);
+  document.getElementById('turIleri').addEventListener('click', function () { if (turI < MET.tur.length - 1) { turI++; turGoster(); } else turBitir(); });
+  (function () { var x = 0; tur.addEventListener('touchstart', function (e) { x = e.touches[0].clientX; }, { passive: true });
+    tur.addEventListener('touchend', function (e) { var dx = e.changedTouches[0].clientX - x; if (Math.abs(dx) < 50) return; if (dx < 0 && turI < MET.tur.length - 1) turI++; else if (dx > 0 && turI > 0) turI--; else return; turGoster(); }, { passive: true }); })();
+  var turGoruldu = false; try { turGoruldu = localStorage.getItem('reo_tur_v1') === '1'; } catch (e) {}
+  if (NATIVE && !turGoruldu) { turGoster(); tur.classList.remove('gz'); }
+
+  /* ---- Çıkış onayı (Android geri tuşu) ---- */
+  var cik = document.getElementById('cik');
+  document.getElementById('cikB').textContent = MET.cikB; document.getElementById('cikP').textContent = MET.cikP;
+  document.getElementById('cikV').textContent = MET.vaz; document.getElementById('cikE').textContent = MET.cik;
+  function cikKapat() { cik.classList.add('gz'); }
+  document.getElementById('cikV').addEventListener('click', cikKapat);
+  cik.addEventListener('click', function (e) { if (e.target === cik) cikKapat(); });
+  document.getElementById('cikE').addEventListener('click', function () { cikKapat(); if (APPP && APPP.exitApp) APPP.exitApp(); else if (APPP) APPP.minimizeApp(); });
+
   /* ---- Yerel ayarlar ---- */
   if (SB) { SB.setStyle({ style: 'DARK' }).catch(function () {}); if (PLATFORM === 'android') SB.setBackgroundColor({ color: '#0b3b60' }).catch(function () {}); }
   if (APPP) {
-    APPP.addListener('backButton', function () { APPP.minimizeApp(); });
+    APPP.addListener('backButton', function () {
+      if (turAcikMi()) { if (turI > 0) { turI--; turGoster(); } else turBitir(); return; }
+      if (!cik.classList.contains('gz')) { cikKapat(); return; }
+      cik.classList.remove('gz');
+    });
     APPP.addListener('resume', function () { if (!yuklendi) ac(); else gonder({}); });
   }
   if (SP) setTimeout(function () { SP.hide().catch(function () {}); }, 300);

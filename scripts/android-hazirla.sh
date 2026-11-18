@@ -38,7 +38,7 @@ android {
         minSdkVersion 24
         targetSdkVersion 36
         if (System.getenv("BUILD_NUMBER")) { versionCode Integer.parseInt(System.getenv("BUILD_NUMBER")) + 1 }
-        versionName "1.0.1"
+        versionName "1.1.0"
     }
 }
 GEOF
