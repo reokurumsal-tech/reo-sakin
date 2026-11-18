@@ -13,6 +13,8 @@ M=android/app/src/main/AndroidManifest.xml
 grep -q POST_NOTIFICATIONS $M || sed -i.bak 's#<uses-permission android:name="android.permission.INTERNET" />#<uses-permission android:name="android.permission.INTERNET" />\n    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />#' $M
 grep -q 'default_notification_channel_id' $M || sed -i.bak 's#</application>#    <meta-data android:name="com.google.firebase.messaging.default_notification_channel_id" android:value="reo" />\n    </application>#' $M
 grep -q 'android:screenOrientation' $M || sed -i.bak 's#android:name=".MainActivity"#android:name=".MainActivity"\n            android:screenOrientation="portrait"#' $M
+# Yatay/dikey ekran özelliği zorunlu sayılmasın (Play: "Zorunlu donanım özelliği beyanları" uyarısı); tabletler ve Chromebook'lar da yükleyebilsin
+grep -q 'android.hardware.screen.portrait' $M || perl -0pi -e 's#<application#<uses-feature android:name="android.hardware.screen.portrait" android:required="false" />\n    <uses-feature android:name="android.hardware.screen.landscape" android:required="false" />\n    <application#' $M
 rm -f $M.bak
 V=android/variables.gradle
 [ -f $V ] && sed -i.bak -E 's/minSdkVersion = [0-9]+/minSdkVersion = 24/; s/compileSdkVersion = [0-9]+/compileSdkVersion = 36/; s/targetSdkVersion = [0-9]+/targetSdkVersion = 36/' $V && rm -f $V.bak
@@ -38,7 +40,7 @@ android {
         minSdkVersion 24
         targetSdkVersion 36
         if (System.getenv("BUILD_NUMBER")) { versionCode Integer.parseInt(System.getenv("BUILD_NUMBER")) + 1 }
-        versionName "1.1.0"
+        versionName "1.1.1"
     }
 }
 GEOF
