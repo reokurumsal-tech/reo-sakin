@@ -5,7 +5,7 @@ set -e
 cd "$(dirname "$0")/.."
 cp node_modules/@capacitor/core/dist/capacitor.js www/capacitor.js || { echo "HATA: @capacitor/core/dist/capacitor.js bulunamadı"; exit 1; }
 [ -d android ] || npx cap add android
-npx capacitor-assets generate --android --iconBackgroundColor '#4338ca' --splashBackgroundColor '#4338ca' --splashBackgroundColorDark '#4338ca'
+npx capacitor-assets generate --android --iconBackgroundColor '#081c36' --splashBackgroundColor '#081c36' --splashBackgroundColorDark '#081c36'
 npx cap sync android
 # Sesli komut: mikrofon izni ve Google ses tanıma servisine erişim (Android 11+ paket görünürlüğü)
 M=android/app/src/main/AndroidManifest.xml
