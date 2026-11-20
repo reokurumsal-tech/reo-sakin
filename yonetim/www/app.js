@@ -128,21 +128,28 @@
    *   uygulama → portal : {reoKasa:"cevap", tok:"...", app:true}
    */
   var PR = P('Preferences');
+  var SURUM = '1.0.1';
+  function sureli(p, ms, yedek) { return new Promise(function (ok) { var b = 0; var t = setTimeout(function () { if (!b) { b = 1; ok(yedek()); } }, ms); p.then(function (v) { if (!b) { b = 1; clearTimeout(t); ok(v); } }, function () { if (!b) { b = 1; clearTimeout(t); ok(yedek()); } }); }); }
+  function yerel() { try { return localStorage.getItem('reo__tok') || ''; } catch (e) { return ''; } }
   function kasaOku() {
-    var yerel = function () { try { return localStorage.getItem('reo__tok') || ''; } catch (e) { return ''; } };
     if (!PR) return Promise.resolve(yerel());
-    return PR.get({ key: 'reo__tok' }).then(function (r) { return (r && r.value) || yerel(); }).catch(yerel);
+    var p; try { p = PR.get({ key: 'reo__tok' }).then(function (r) { return (r && r.value) || yerel(); }); } catch (e) { return Promise.resolve(yerel()); }
+    return sureli(p, 1200, yerel); // eklenti cevap vermezse portalı bekletme
   }
   function kasaYaz(t) {
     try { if (t) localStorage.setItem('reo__tok', t); else localStorage.removeItem('reo__tok'); } catch (e) {}
-    if (PR) { (t ? PR.set({ key: 'reo__tok', value: t }) : PR.remove({ key: 'reo__tok' })).catch(function () {}); }
+    if (PR) { try { (t ? PR.set({ key: 'reo__tok', value: t }) : PR.remove({ key: 'reo__tok' })).catch(function () {}); } catch (e) {} }
   }
+  // Mesaj gerçekten uygulamanın açtığı portal çerçevesinin içinden mi geliyor?
+  function bizden(src) { try { for (var w = src, n = 0; w && n < 8; n++) { if (w === f.contentWindow) return true; if (w === w.parent) break; w = w.parent; } } catch (x) {} return false; }
+  function kasaKoken(o) { return /^https:\/\/([a-z0-9-]+\.)*googleusercontent\.com$/.test(o) || o === 'https://script.google.com' || o === 'https://reo-portal.com' || o === 'https://www.reo-portal.com'; }
   window.addEventListener('message', function (e) {
     var d = e.data;
-    if (!d || typeof d !== 'object' || !d.reoKasa || !/^https:\/\/([a-z0-9-]+\.)*googleusercontent\.com$/.test(e.origin)) return;
+    if (!d || typeof d !== 'object' || !d.reoKasa || !e.source) return;
+    if (!kasaKoken(e.origin) || !bizden(e.source)) return;
     if (d.reoKasa === 'al') {
       var kaynak = e.source, koken = e.origin;
-      kasaOku().then(function (t) { try { kaynak.postMessage({ reoKasa: 'cevap', tok: /^[a-f0-9]{64}$/.test(t) ? t : '', app: true }, koken); } catch (x) {} });
+      kasaOku().then(function (t) { try { kaynak.postMessage({ reoKasa: 'cevap', tok: /^[a-f0-9]{64}$/.test(t) ? t : '', app: true, v: SURUM }, koken); } catch (x) {} });
     } else if (d.reoKasa === 'yaz') {
       kasaYaz(/^[a-f0-9]{64}$/.test(d.tok || '') ? d.tok : '');
     }
