@@ -7,8 +7,8 @@ cp node_modules/@capacitor/core/dist/capacitor.js www/capacitor.js || { echo "HA
 # Apple: Nisan 2027'den itibaren en az iOS 15.0 hedefi zorunlu (ITMS-90068)
 sed -i '' "s/platform :ios, '[0-9.]*'/platform :ios, '15.0'/" ios/App/Podfile
 sed -i '' 's/IPHONEOS_DEPLOYMENT_TARGET = [0-9.]*;/IPHONEOS_DEPLOYMENT_TARGET = 15.0;/g' ios/App/App.xcodeproj/project.pbxproj
-# Yalnızca iPhone (iPad ekran görüntüsü istenmesin)
-sed -i '' 's/TARGETED_DEVICE_FAMILY = "1,2";/TARGETED_DEVICE_FAMILY = 1;/g' ios/App/App.xcodeproj/project.pbxproj
+# iPhone + iPad (iPad'de tam ekran; iPad'de dört yön de desteklenir)
+sed -i '' 's/TARGETED_DEVICE_FAMILY = 1;/TARGETED_DEVICE_FAMILY = "1,2";/g' ios/App/App.xcodeproj/project.pbxproj
 npx capacitor-assets generate --ios --iconBackgroundColor '#ffffff' --splashBackgroundColor '#ffffff' --splashBackgroundColorDark '#ffffff'
 npx cap sync ios
 A=ios/App/App
@@ -21,7 +21,9 @@ PL=$A/Info.plist
 /usr/libexec/PlistBuddy -c "Add :CFBundleDevelopmentRegion string tr" $PL
 /usr/libexec/PlistBuddy -c "Delete :CFBundleLocalizations" $PL 2>/dev/null || true
 /usr/libexec/PlistBuddy -c "Add :CFBundleLocalizations array" -c "Add :CFBundleLocalizations:0 string tr" -c "Add :CFBundleLocalizations:1 string en" -c "Add :CFBundleLocalizations:2 string ru" $PL
-# Yalnızca dikey kullanım (iPhone)
+# iPhone: yalnızca dikey · iPad: dört yön (Apple, iPad'de çoklu görev için dört yönü ister)
 /usr/libexec/PlistBuddy -c "Delete :UISupportedInterfaceOrientations" $PL 2>/dev/null || true
 /usr/libexec/PlistBuddy -c "Add :UISupportedInterfaceOrientations array" -c "Add :UISupportedInterfaceOrientations:0 string UIInterfaceOrientationPortrait" $PL
+/usr/libexec/PlistBuddy -c "Delete :UISupportedInterfaceOrientations~ipad" $PL 2>/dev/null || true
+/usr/libexec/PlistBuddy -c "Add :UISupportedInterfaceOrientations~ipad array" -c "Add :UISupportedInterfaceOrientations~ipad:0 string UIInterfaceOrientationPortrait" -c "Add :UISupportedInterfaceOrientations~ipad:1 string UIInterfaceOrientationPortraitUpsideDown" -c "Add :UISupportedInterfaceOrientations~ipad:2 string UIInterfaceOrientationLandscapeLeft" -c "Add :UISupportedInterfaceOrientations~ipad:3 string UIInterfaceOrientationLandscapeRight" $PL
 echo "iOS hazır: ios/App/App.xcworkspace"
