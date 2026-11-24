@@ -11,9 +11,9 @@ cat > "$WWW/odeme.html" <<'HTML'
 <!doctype html><html lang="tr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex"><title>Güvenli ödeme</title>
 <style>html,body{margin:0;height:100%;background:#fff}iframe{border:0;width:100%;height:100%;display:block}p{font-family:-apple-system,system-ui,sans-serif;text-align:center;padding:40px 20px;color:#475569}</style></head>
 <body><script>
-var t=(location.hash||"").slice(1);
-if(!/^[A-Za-z0-9]{10,200}$/.test(t)){document.body.innerHTML="<p>Ödeme bilgisi geçersiz.</p>"}
-else{var f=document.createElement("iframe");f.src="https://www.paytr.com/odeme/guvenli/"+t;f.allow="payment";f.title="PayTR";document.body.appendChild(f);history.replaceState(null,"",location.pathname)}
+var t="";try{t=decodeURIComponent((location.hash||"").slice(1)||new URLSearchParams(location.search).get("t")||"")}catch(e){}
+if(!t||t.length>3000||/[\s"'<>]/.test(t)){document.body.innerHTML="<p>Ödeme bilgisi geçersiz (uzunluk: "+t.length+"). Lütfen pencereyi kapatıp tekrar deneyin.</p>"}
+else{var f=document.createElement("iframe");f.src="https://www.paytr.com/odeme/guvenli/"+encodeURIComponent(t);f.allow="payment";f.title="PayTR";document.body.appendChild(f)}
 window.addEventListener("message",function(e){var d=e.data;if(d&&typeof d==="object"&&d.reoPos&&e.origin===location.origin){try{window.parent.postMessage({reoPos:d.reoPos==="ok"?"ok":"hata"},"*")}catch(x){}}});
 </script></body></html>
 HTML
